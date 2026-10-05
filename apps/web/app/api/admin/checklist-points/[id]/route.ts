@@ -53,8 +53,8 @@ export const PUT = withAuth(async (req: NextRequest, ctx) => {
     if (updateData.targetTime !== undefined) dbUpdate.targetTime = updateData.targetTime;
     if (updateData.toleranceMinutes !== undefined) dbUpdate.toleranceMinutes = updateData.toleranceMinutes;
     if (updateData.activeDays !== undefined) dbUpdate.activeDays = updateData.activeDays.join(',');
-    if (updateData.numberMin !== undefined) dbUpdate.numberMin = updateData.numberMin !== null ? String(updateData.numberMin) : null;
-    if (updateData.numberMax !== undefined) dbUpdate.numberMax = updateData.numberMax !== null ? String(updateData.numberMax) : null;
+    if (updateData.numberMin !== undefined) dbUpdate.numberMin = updateData.numberMin;
+    if (updateData.numberMax !== undefined) dbUpdate.numberMax = updateData.numberMax;
     if (updateData.sortOrder !== undefined) dbUpdate.sortOrder = updateData.sortOrder;
     if (updateData.isActive !== undefined) dbUpdate.isActive = updateData.isActive;
 
