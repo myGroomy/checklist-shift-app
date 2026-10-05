@@ -57,7 +57,7 @@ const NAV: NavItem[] = [
   { href: '/admin/kategori-incident', label: 'Kategori Incident', icon: AlertTriangle, ready: true },
   { href: '/admin/operasi-shift', label: 'Operasi Shift', icon: Activity, ready: false, note: 'Fase 6' },
   { href: '/admin/incident', label: 'Incident', icon: FileText, ready: false, note: 'Fase 6' },
-  { href: '/admin/laporan', label: 'Laporan', icon: BarChart3, ready: false, note: 'Fase 7' },
+  { href: '/admin/laporan', label: 'Laporan', icon: BarChart3, ready: true },
   { href: '/admin/pengaturan', label: 'Pengaturan', icon: Settings, ready: true },
   { href: '/admin/audit-log', label: 'Audit Log', icon: ScrollText, ready: true },
 ];
@@ -200,4 +200,3 @@ export function AdminShell({
     </div>
   );
 }
-

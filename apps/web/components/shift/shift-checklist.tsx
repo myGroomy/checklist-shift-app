@@ -2,8 +2,11 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ulid } from 'ulid';
 import { AlertCircle, ArrowLeft, Clock3, Loader2, UserRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ChecklistPointControls } from '@/components/shift/checklist-point-controls';
+import { ShiftCloseDialog } from '@/components/shift/shift-close-dialog';
 
 type EntryState = 'belum' | 'selesai' | 'skip';
 type InputType = 'centang' | 'foto' | 'teks' | 'angka' | 'ok_tidak_ok';
@@ -45,6 +48,7 @@ interface ShiftProgressResponse {
     date: string;
     status: string;
     branch_timezone: string | null;
+    pj_user_id: string;
   };
   progress: {
     total: number;
@@ -66,6 +70,7 @@ interface ShiftProgressResponse {
     id: string;
     label: string;
     field_type: string;
+    options: string[] | null;
     is_required: boolean;
   }>;
   server_time: string;
@@ -91,14 +96,15 @@ function labelTiming(timing: string | null) {
 
 export function ShiftChecklistClient({
   shiftId,
+  userId,
 }: {
   shiftId: string;
+  userId: string;
 }) {
   const [data, setData] = useState<ShiftProgressResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [notice, setNotice] = useState<string | null>(null);
   const [busyPoint, setBusyPoint] = useState<string | null>(null);
-  const [drafts, setDrafts] = useState<Record<string, string>>({});
 
   const loadProgress = useCallback(async () => {
     setLoading(true);
@@ -123,6 +129,20 @@ export function ShiftChecklistClient({
     void loadProgress();
   }, [loadProgress]);
 
+  useEffect(() => {
+    const refresh = () => {
+      if (document.visibilityState === 'visible') void loadProgress();
+    };
+    const interval = window.setInterval(refresh, 20_000);
+    document.addEventListener('visibilitychange', refresh);
+    window.addEventListener('focus', refresh);
+    return () => {
+      window.clearInterval(interval);
+      document.removeEventListener('visibilitychange', refresh);
+      window.removeEventListener('focus', refresh);
+    };
+  }, [loadProgress]);
+
   const totalDone = useMemo(() => data?.progress.selesai ?? 0, [data]);
   const totalSkip = useMemo(() => data?.progress.skip ?? 0, [data]);
 
@@ -131,7 +151,7 @@ export function ShiftChecklistClient({
     setNotice(null);
     try {
       const payload: Record<string, string | number | boolean | null> = {
-        client_action_id: `${Date.now()}-${point.point_ref}`,
+        client_action_id: ulid(),
         point_ref: point.point_ref,
         action,
       };
@@ -164,11 +184,13 @@ export function ShiftChecklistClient({
         },
         body: JSON.stringify(payload),
       });
-      const json = (await res.json()) as { error?: string; status?: string };
+      const json = (await res.json()) as { error?: string; status?: string; code?: string };
       if (!res.ok) {
+        if (json.code === 'BR12_CONFLICT') {
+          await loadProgress();
+        }
         throw new Error(json.error || 'Tidak dapat menyimpan aksi checklist');
       }
-      setDrafts((prev) => ({ ...prev, [point.point_ref]: '' }));
       await loadProgress();
     } catch (error) {
       setNotice(error instanceof Error ? error.message : 'Gagal menyimpan checklist');
@@ -177,88 +199,20 @@ export function ShiftChecklistClient({
     }
   };
 
-  const renderInputControls = (point: ProgressPoint) => {
-    const value = drafts[point.point_ref] ?? point.value ?? '';
-
-    if (point.state === 'selesai' && point.input_type !== 'foto') {
-      return (
-        <div className="flex flex-wrap gap-2">
-          <Button type="button" variant="outline" size="sm" onClick={() => void submitEntry(point, 'batal')} disabled={busyPoint === point.point_ref}>
-            {busyPoint === point.point_ref ? 'Memproses...' : 'Batal'}
-          </Button>
-          {(point.input_type === 'teks' || point.input_type === 'angka' || point.input_type === 'ok_tidak_ok' || point.input_type === 'centang') && (
-            <Button type="button" variant="secondary" size="sm" onClick={() => void submitEntry(point, 'selesai', value || String(point.value ?? ''))} disabled={busyPoint === point.point_ref}>
-              Simpan ulang
-            </Button>
-          )}
-        </div>
-      );
+  const markOnDuty = async () => {
+    setNotice(null);
+    try {
+      const response = await fetch(`/api/shifts/${shiftId}/join?duty=1`, {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'fetch' },
+      });
+      const result = (await response.json()) as { error?: string };
+      if (!response.ok) throw new Error(result.error || 'Gagal mencatat tugas.');
+      await loadProgress();
+      setNotice('Status saya bertugas sudah dicatat.');
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'Gagal mencatat tugas.');
     }
-
-    if (point.input_type === 'centang') {
-      return (
-        <div className="flex gap-2">
-          <Button type="button" size="sm" onClick={() => void submitEntry(point, 'selesai', 'true')} disabled={busyPoint === point.point_ref}>
-            {busyPoint === point.point_ref ? '...' : 'Selesai'}
-          </Button>
-          <Button type="button" size="sm" variant="outline" onClick={() => void submitEntry(point, 'skip', 'Tidak dilakukan')}>
-            Skip
-          </Button>
-        </div>
-      );
-    }
-
-    if (point.input_type === 'ok_tidak_ok') {
-      return (
-        <div className="flex gap-2">
-          <Button type="button" size="sm" onClick={() => void submitEntry(point, 'selesai', 'ya')} disabled={busyPoint === point.point_ref}>OK</Button>
-          <Button type="button" size="sm" variant="outline" onClick={() => void submitEntry(point, 'selesai', 'tidak')} disabled={busyPoint === point.point_ref}>Tidak</Button>
-          <Button type="button" size="sm" variant="secondary" onClick={() => void submitEntry(point, 'skip', 'Tidak relevan')} disabled={busyPoint === point.point_ref}>Skip</Button>
-        </div>
-      );
-    }
-
-    if (point.input_type === 'teks') {
-      return (
-        <div className="flex flex-col gap-2">
-          <textarea
-            value={value}
-            onChange={(e) => setDrafts((prev) => ({ ...prev, [point.point_ref]: e.target.value }))}
-            rows={3}
-            className="w-full rounded-lg border border-border bg-canvas px-3 py-2 text-sm focus:border-ink focus:outline-none"
-            placeholder="Tulis catatan..."
-          />
-          <div className="flex gap-2">
-            <Button type="button" size="sm" onClick={() => void submitEntry(point, 'selesai', value)} disabled={busyPoint === point.point_ref}>Simpan</Button>
-            <Button type="button" size="sm" variant="secondary" onClick={() => void submitEntry(point, 'skip', 'Tidak relevan')} disabled={busyPoint === point.point_ref}>Skip</Button>
-          </div>
-        </div>
-      );
-    }
-
-    if (point.input_type === 'angka') {
-      return (
-        <div className="flex flex-col gap-2">
-          <input
-            type="number"
-            value={value}
-            onChange={(e) => setDrafts((prev) => ({ ...prev, [point.point_ref]: e.target.value }))}
-            className="w-full rounded-lg border border-border bg-canvas px-3 py-2 text-sm focus:border-ink focus:outline-none"
-            placeholder={point.number_min !== null && point.number_max !== null ? `${point.number_min} - ${point.number_max}` : 'Masukkan angka'}
-          />
-          <div className="flex gap-2">
-            <Button type="button" size="sm" onClick={() => void submitEntry(point, 'selesai', value)} disabled={busyPoint === point.point_ref}>Simpan</Button>
-            <Button type="button" size="sm" variant="secondary" onClick={() => void submitEntry(point, 'skip', 'Tidak relevan')} disabled={busyPoint === point.point_ref}>Skip</Button>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className="flex gap-2">
-        <Button type="button" size="sm" variant="outline" disabled>Foto akan dibuka di modul berikutnya</Button>
-      </div>
-    );
   };
 
   if (loading && !data) {
@@ -374,7 +328,17 @@ export function ShiftChecklistClient({
                       )}
                     </div>
 
-                    <div className="mt-3">{renderInputControls(point)}</div>
+                    <div className="mt-3">
+                      <ChecklistPointControls
+                        point={point}
+                        shiftId={shiftId}
+                        disabled={data.shift.status !== 'berjalan'}
+                        busy={busyPoint === point.point_ref}
+                        onComplete={(value) => submitEntry(point, 'selesai', value)}
+                        onCancel={() => submitEntry(point, 'batal')}
+                        onSkip={(reason) => submitEntry(point, 'skip', reason)}
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -418,10 +382,34 @@ export function ShiftChecklistClient({
           </div>
 
           <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
-            <h3 className="text-base font-bold text-ink">Aksi</h3>
-            <div className="mt-3 flex gap-2">
-              <Button type="button" className="flex-1" asChild>
-                <Link href="/">Kembali ke home</Link>
+            <h3 className="text-base font-bold text-ink">Aksi shift</h3>
+            <div className="mt-3 flex flex-col gap-3">
+              {data.shift.status === 'berjalan' &&
+                !data.participants.some((participant) => participant.user_id === userId) && (
+                  <Button type="button" variant="secondary" onClick={() => void markOnDuty()}>
+                    Saya bertugas
+                  </Button>
+                )}
+              {data.shift.status === 'berjalan' && data.shift.pj_user_id === userId && (
+                <ShiftCloseDialog
+                  shiftId={shiftId}
+                  isPj
+                  missingRequiredItems={data.categories.flatMap((category) =>
+                    category.points
+                      .filter((point) => point.is_required && point.state === 'belum')
+                      .map((point) => point.title)
+                  )}
+                  fields={data.handover_fields}
+                  onClosed={loadProgress}
+                />
+              )}
+              {data.shift.status !== 'berjalan' && (
+                <p className="rounded-lg border border-border bg-canvas p-3 text-sm text-ink-muted">
+                  Shift sudah ditutup. Checklist tampil hanya untuk dibaca.
+                </p>
+              )}
+              <Button type="button" variant="outline" asChild>
+                <Link href="/">Kembali ke beranda</Link>
               </Button>
             </div>
           </div>

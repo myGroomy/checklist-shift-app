@@ -1,8 +1,22 @@
 import { createHash } from 'crypto';
-import { and, eq, isNull } from 'drizzle-orm';
-import { AlertCircle, CheckCircle2, Clock3 } from 'lucide-react';
+import { and, asc, eq, isNull } from 'drizzle-orm';
+import { AlertCircle } from 'lucide-react';
 import { db } from '@/lib/db';
-import { branches, handovers, incidents, reports, shareTokens, shiftInstances } from '@/drizzle/schema';
+import type { Snapshot } from '@/lib/db/snapshot';
+import { PublicReportView } from '@/components/report/public-report-view';
+import {
+  addenda,
+  branches,
+  entries,
+  handovers,
+  incidentCategories,
+  incidents,
+  participants,
+  reports,
+  shareTokens,
+  shiftInstances,
+  users,
+} from '@/drizzle/schema';
 
 export default async function PublicReportPage({
   params,
@@ -26,11 +40,11 @@ export default async function PublicReportPage({
     .limit(1);
 
   if (!share) {
-    return <PublicState title="Tautan laporan tidak valid" description="Tautan ini tidak aktif, sudah dicabut, atau sudah tidak berlaku." tone="warn" />;
+    return <PublicState title="Tautan laporan tidak valid" description="Tautan ini tidak aktif, sudah dicabut, atau sudah tidak berlaku." />;
   }
 
   if (new Date(share.expiresAt) < new Date()) {
-    return <PublicState title="Tautan laporan kedaluwarsa" description="Tautan ini sudah kedaluwarsa dan tidak dapat dibuka lagi." tone="warn" />;
+    return <PublicState title="Tautan laporan kedaluwarsa" description="Tautan ini sudah kedaluwarsa dan tidak dapat dibuka lagi." />;
   }
 
   const [report] = await db
@@ -38,15 +52,16 @@ export default async function PublicReportPage({
       id: reports.id,
       reportNumber: reports.reportNumber,
       generatedAt: reports.generatedAt,
-      summaryStats: reports.summaryStats,
       isLocked: reports.isLocked,
+      archivePdfDriveUrl: reports.archivePdfDriveUrl,
+      archivedPhotoCount: reports.archivedPhotoCount,
     })
     .from(reports)
     .where(eq(reports.id, share.reportId))
     .limit(1);
 
   if (!report) {
-    return <PublicState title="Laporan tidak ditemukan" description="Data laporan tidak ditemukan di sistem." tone="warn" />;
+    return <PublicState title="Laporan tidak ditemukan" description="Data laporan tidak ditemukan di sistem." />;
   }
 
   const [shift] = await db
@@ -56,6 +71,9 @@ export default async function PublicReportPage({
       status: shiftInstances.status,
       branchId: shiftInstances.branchId,
       openedAt: shiftInstances.openedAt,
+      closedAt: shiftInstances.closedAt,
+      pjUserId: shiftInstances.pjUserId,
+      templateSnapshot: shiftInstances.templateSnapshot,
     })
     .from(shiftInstances)
     .where(eq(shiftInstances.id, share.shiftInstanceId))
@@ -82,119 +100,127 @@ export default async function PublicReportPage({
     .where(eq(handovers.shiftInstanceId, share.shiftInstanceId))
     .limit(1);
 
+  if (!shift) {
+    return <PublicState title="Shift tidak ditemukan" description="Data shift untuk laporan ini tidak tersedia." />;
+  }
+
+  const [pj] = await db
+    .select({ name: users.name })
+    .from(users)
+    .where(eq(users.id, shift.pjUserId))
+    .limit(1);
+
+  const entryRows = await db
+    .select({
+      pointRef: entries.pointRef,
+      state: entries.state,
+      value: entries.value,
+      skipReason: entries.skipReason,
+      timingLabel: entries.timingLabel,
+      completedBy: entries.completedBy,
+      completedAt: entries.completedAt,
+      completedByName: users.name,
+    })
+    .from(entries)
+    .leftJoin(users, eq(entries.completedBy, users.id))
+    .where(eq(entries.shiftInstanceId, share.shiftInstanceId));
+
+  const participantRows = await db
+    .select({
+      id: participants.userId,
+      name: users.name,
+      isPj: users.id,
+      firstActionAt: participants.firstActionAt,
+    })
+    .from(participants)
+    .innerJoin(users, eq(participants.userId, users.id))
+    .where(eq(participants.shiftInstanceId, share.shiftInstanceId))
+    .orderBy(asc(participants.firstActionAt));
+
+  const completedByUser = new Map<string, number>();
+  for (const entry of entryRows) {
+    if (entry.completedBy && entry.state === 'selesai') {
+      completedByUser.set(entry.completedBy, (completedByUser.get(entry.completedBy) ?? 0) + 1);
+    }
+  }
+
   const incidentRows = await db
     .select({
       id: incidents.id,
+      categoryName: incidentCategories.name,
       description: incidents.description,
       status: incidents.status,
       occurredAt: incidents.occurredAt,
     })
     .from(incidents)
+    .innerJoin(incidentCategories, eq(incidents.categoryId, incidentCategories.id))
     .where(eq(incidents.shiftInstanceId, share.shiftInstanceId));
 
+  const addendumRows = await db
+    .select({
+      id: addenda.id,
+      note: addenda.note,
+      authorName: users.name,
+      createdAt: addenda.createdAt,
+    })
+    .from(addenda)
+    .innerJoin(users, eq(addenda.authorId, users.id))
+    .where(eq(addenda.reportId, report.id))
+    .orderBy(asc(addenda.createdAt));
+
   return (
-    <main className="mx-auto max-w-4xl p-4 md:p-8">
-      <div className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-ink-muted">
-              Laporan publik
-            </p>
-            <h1 className="mt-1 text-2xl font-bold">
-              {branch?.name ?? 'Cabang'} — {report.reportNumber}
-            </h1>
-          </div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
-            <CheckCircle2 className="h-4 w-4" />
-            {report.isLocked ? 'Terkunci' : 'Terbuka'}
-          </div>
-        </div>
-
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
-          <Stat label="Cabang" value={branch?.name ?? '-'} />
-          <Stat label="Tanggal shift" value={shift?.shiftDate ? new Date(`${shift.shiftDate}T00:00:00`).toLocaleDateString('id-ID') : '-'} />
-          <Stat label="Dibuat" value={report.generatedAt ? new Date(report.generatedAt).toLocaleString('id-ID') : '-'} />
-        </div>
-
-        <div className="mt-6 rounded-xl border border-border bg-canvas p-4">
-          <h2 className="text-base font-semibold">Ringkasan</h2>
-          <pre className="mt-3 overflow-x-auto whitespace-pre-wrap text-sm text-ink-muted">
-            {report.summaryStats ? JSON.stringify(report.summaryStats, null, 2) : 'Belum ada ringkasan.'}
-          </pre>
-        </div>
-
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
-          <section className="rounded-xl border border-border bg-canvas p-4">
-            <h2 className="text-base font-semibold">Handover</h2>
-            <div className="mt-3 space-y-3 text-sm text-ink-muted">
-              {handover ? (
-                <>
-                  {handover.values && Object.keys(handover.values as Record<string, unknown>).length > 0 ? (
-                    <pre className="overflow-x-auto whitespace-pre-wrap">
-                      {JSON.stringify(handover.values, null, 2)}
-                    </pre>
-                  ) : null}
-                  {handover.freeText ? <p>{handover.freeText}</p> : <p>Tidak ada catatan handover.</p>}
-                </>
-              ) : (
-                <p>Belum ada handover yang dikirim.</p>
-              )}
-            </div>
-          </section>
-
-          <section className="rounded-xl border border-border bg-canvas p-4">
-            <h2 className="text-base font-semibold">Incident</h2>
-            <div className="mt-3 space-y-3 text-sm text-ink-muted">
-              {incidentRows.length > 0 ? (
-                incidentRows.map((incident) => (
-                  <div key={incident.id} className="rounded-lg border border-border bg-surface p-3">
-                    <p className="font-medium text-ink">{incident.status === 'open' ? 'Open' : 'Selesai'}</p>
-                    <p className="mt-1">{incident.description}</p>
-                    {incident.occurredAt && (
-                      <p className="mt-1 text-[11px] text-ink-muted">
-                        {new Date(incident.occurredAt).toLocaleString('id-ID')}
-                      </p>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <p>Tidak ada incident tercatat.</p>
-              )}
-            </div>
-          </section>
-        </div>
-      </div>
-    </main>
+    <PublicReportView
+      data={{
+        branch: branch ? { name: branch.name, code: branch.code } : null,
+        shift: {
+          shiftDate: shift.shiftDate,
+          status: shift.status,
+          openedAt: shift.openedAt,
+          closedAt: shift.closedAt,
+          pjName: pj?.name ?? null,
+          snapshot: shift.templateSnapshot as Snapshot,
+        },
+        report: {
+          reportNumber: report.reportNumber,
+          generatedAt: report.generatedAt,
+          isLocked: report.isLocked,
+          archivePdfDriveUrl: report.archivePdfDriveUrl,
+          archivedPhotoCount: report.archivedPhotoCount,
+        },
+        entries: entryRows.map((entry) => ({
+          ...entry,
+          completedByName: entry.completedByName ?? null,
+        })),
+        participants: participantRows.map((person) => ({
+          id: person.id,
+          name: person.name,
+          isPj: person.id === shift.pjUserId,
+          itemsDone: completedByUser.get(person.id) ?? 0,
+        })),
+        handover: handover ?? null,
+        incidents: incidentRows,
+        addenda: addendumRows,
+      }}
+    />
   );
 }
 
 function PublicState({
   title,
   description,
-  tone,
 }: {
   title: string;
   description: string;
-  tone: 'warn';
 }) {
   return (
     <main className="mx-auto flex min-h-screen max-w-xl items-center justify-center p-6">
       <div className="w-full rounded-2xl border border-border bg-surface p-6 text-center shadow-sm">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-amber-700">
-          {tone === 'warn' ? <AlertCircle className="h-6 w-6" /> : <Clock3 className="h-6 w-6" />}
+          <AlertCircle className="h-6 w-6" />
         </div>
         <h1 className="mt-4 text-xl font-bold">{title}</h1>
         <p className="mt-2 text-sm text-ink-muted">{description}</p>
       </div>
     </main>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-border bg-canvas p-3">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-muted">{label}</div>
-      <div className="mt-2 text-sm font-medium text-ink">{value}</div>
-    </div>
   );
 }

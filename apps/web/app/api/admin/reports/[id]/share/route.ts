@@ -1,11 +1,52 @@
 import { createHash, randomBytes } from 'crypto';
-import { eq } from 'drizzle-orm';
+import { and, desc, eq, isNull } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 import { ulid } from 'ulid';
 import { db } from '../../../../../../lib/db';
 import { requireBranchAccess, requireRole, withAuth } from '../../../../../../lib/auth/middleware';
 import type { AuthContext } from '../../../../../../lib/auth/session';
 import { reports, shareTokens, shiftInstances } from '../../../../../../drizzle/schema';
+
+export const GET = withAuth(async (req: NextRequest, ctx: AuthContext) => {
+  const reportId = new URL(req.url).pathname.split('/').slice(-2)[0];
+  const roleError = requireRole(ctx, 'admin');
+  if (roleError) return roleError;
+
+  const [report] = await db
+    .select({ id: reports.id, shiftInstanceId: reports.shiftInstanceId })
+    .from(reports)
+    .where(eq(reports.id, reportId))
+    .limit(1);
+  if (!report) return NextResponse.json({ error: 'Laporan tidak ditemukan' }, { status: 404 });
+
+  const [shift] = await db
+    .select({ branchId: shiftInstances.branchId })
+    .from(shiftInstances)
+    .where(eq(shiftInstances.id, report.shiftInstanceId))
+    .limit(1);
+  if (!shift) return NextResponse.json({ error: 'Shift laporan tidak ditemukan' }, { status: 404 });
+
+  const branchAccessError = requireBranchAccess(ctx, shift.branchId);
+  if (branchAccessError) return branchAccessError;
+
+  const tokens = await db
+    .select({
+      id: shareTokens.id,
+      expiresAt: shareTokens.expiresAt,
+      revokedAt: shareTokens.revokedAt,
+    })
+    .from(shareTokens)
+    .where(and(eq(shareTokens.reportId, reportId), isNull(shareTokens.revokedAt)))
+    .orderBy(desc(shareTokens.createdAt));
+
+  return NextResponse.json({
+    tokens: tokens.map((token) => ({
+      id: token.id,
+      expires_at: token.expiresAt.toISOString(),
+      expired: token.expiresAt.getTime() <= Date.now(),
+    })),
+  });
+});
 
 export const POST = withAuth(async (req: NextRequest, ctx: AuthContext) => {
   const reportId = new URL(req.url).pathname.split('/').slice(-2)[0];

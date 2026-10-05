@@ -18,7 +18,7 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Cek apakah path publik
-  const isPublic = PUBLIC_PATHS.some((path) => pathname.startsWith(path));
+  const isPublic = pathname === '/' || PUBLIC_PATHS.some((path) => pathname.startsWith(path));
   const token = req.cookies.get('session_token')?.value;
 
   // Jika mencoba akses path publik tanpa/dengan token

@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, desc, eq, inArray } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 import { ulid } from 'ulid';
 import { db } from '../../../lib/db';
@@ -6,7 +6,13 @@ import { appendAuditLog } from '../../../lib/db/audit';
 import { getServerTime } from '../../../lib/db/server-time';
 import { requireBranchAccess, withAuth } from '../../../lib/auth/middleware';
 import type { AuthContext } from '../../../lib/auth/session';
-import { incidentCategories, incidents, shiftInstances } from '../../../drizzle/schema';
+import {
+  branches,
+  incidentCategories,
+  incidents,
+  shiftInstances,
+  users,
+} from '../../../drizzle/schema';
 
 interface IncidentBody {
   shiftInstanceId?: string;
@@ -16,6 +22,53 @@ interface IncidentBody {
   severity?: 'rendah' | 'sedang' | 'tinggi';
   outsideShift?: boolean;
 }
+
+export const GET = withAuth(async (_req: NextRequest, ctx: AuthContext) => {
+  const [categories, branchRows] = await Promise.all([
+    db
+      .select({
+        id: incidentCategories.id,
+        name: incidentCategories.name,
+        sortOrder: incidentCategories.sortOrder,
+      })
+      .from(incidentCategories)
+      .where(eq(incidentCategories.isActive, true))
+      .orderBy(incidentCategories.sortOrder),
+    ctx.branchIds.length
+      ? db
+          .select({ id: branches.id, name: branches.name, code: branches.code })
+          .from(branches)
+          .where(inArray(branches.id, ctx.branchIds))
+      : Promise.resolve([]),
+  ]);
+
+  const incidentRows = ctx.branchIds.length
+    ? await db
+        .select({
+          id: incidents.id,
+          branchId: incidents.branchId,
+          branchName: branches.name,
+          shiftInstanceId: incidents.shiftInstanceId,
+          categoryId: incidents.categoryId,
+          categoryName: incidentCategories.name,
+          description: incidents.description,
+          occurredAt: incidents.occurredAt,
+          reportedAt: incidents.reportedAt,
+          reportedByName: users.name,
+          status: incidents.status,
+          severity: incidents.severity,
+        })
+        .from(incidents)
+        .innerJoin(branches, eq(incidents.branchId, branches.id))
+        .innerJoin(incidentCategories, eq(incidents.categoryId, incidentCategories.id))
+        .innerJoin(users, eq(incidents.reportedBy, users.id))
+        .where(and(inArray(incidents.branchId, ctx.branchIds), eq(incidents.isTest, false)))
+        .orderBy(desc(incidents.reportedAt))
+        .limit(100)
+    : [];
+
+  return NextResponse.json({ categories, branches: branchRows, incidents: incidentRows });
+});
 
 export const POST = withAuth(async (req: NextRequest, ctx: AuthContext) => {
   let body: IncidentBody = {};

@@ -1,19 +1,13 @@
 import { redirect } from 'next/navigation';
-import { ShiftChecklistClient } from '@/components/shift/shift-checklist';
+import { ReportList } from '@/components/report/report-list';
 import { getSessionTokenFromCookie, validateSessionToken } from '@/lib/auth/session';
 
-export default async function ShiftPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+export default async function ReportPage() {
   const token = getSessionTokenFromCookie();
   if (!token) redirect('/login');
-
   const ctx = await validateSessionToken(token);
   if (!ctx) redirect('/login');
   if (ctx.user.mustChangePin) redirect('/ganti-pin');
 
-  return <ShiftChecklistClient shiftId={id} userId={ctx.user.id} />;
+  return <ReportList />;
 }

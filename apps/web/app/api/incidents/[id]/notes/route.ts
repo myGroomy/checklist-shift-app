@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 import { ulid } from 'ulid';
 import { db } from '../../../../../lib/db';
-import { withAuth } from '../../../../../lib/auth/middleware';
+import { requireBranchAccess, withAuth } from '../../../../../lib/auth/middleware';
 import type { AuthContext } from '../../../../../lib/auth/session';
 import { incidentNotes, incidents } from '../../../../../drizzle/schema';
 
@@ -28,6 +28,11 @@ export const POST = withAuth(async (req: NextRequest, ctx: AuthContext) => {
 
   if (!incident) {
     return NextResponse.json({ error: 'Incident tidak ditemukan' }, { status: 404 });
+  }
+  const branchAccessError = requireBranchAccess(ctx, incident.branchId);
+  if (branchAccessError) return branchAccessError;
+  if (note.length > 2000) {
+    return NextResponse.json({ error: 'Catatan maksimal 2000 karakter.' }, { status: 400 });
   }
 
   const rowId = ulid();
