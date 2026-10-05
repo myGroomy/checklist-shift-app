@@ -73,3 +73,8 @@ export async function fileExists(path: string): Promise<boolean> {
   if (error) return false;
   return data.length > 0;
 }
+
+export async function checkStorageHealth(): Promise<boolean> {
+  const { error } = await supabase.storage.from(BUCKET).list('', { limit: 1 });
+  return !error;
+}

@@ -48,7 +48,7 @@ interface NavItem {
 
 // 13 modul admin (APP_FLOW §6). Modul di luar Fase 3 ditandai menyusul.
 const NAV: NavItem[] = [
-  { href: '/admin', label: 'Dasbor', icon: LayoutDashboard, ready: false, note: 'Fase 8' },
+  { href: '/admin', label: 'Dasbor', icon: LayoutDashboard, ready: true },
   { href: '/admin/cabang', label: 'Cabang', icon: Building2, ready: true },
   { href: '/admin/akun', label: 'Akun', icon: Users, ready: true },
   { href: '/admin/shift', label: 'Shift', icon: Clock, ready: true },
