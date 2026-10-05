@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Tutup Shift — checklist-shift</title>
+  <link rel="stylesheet" href="css/shared.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="header">
+      <div class="header-inner">
+        <div>
+          <div class="header-title">Tutup Shift</div>
+          <div class="header-sub">Opening — 5 Oktober 2026</div>
+        </div>
+        <a href="checklist-aktif.html" class="btn btn-ghost btn-sm">Batal</a>
+      </div>
+    </header>
+
+    <main class="page-content no-bottom-pad">
+      <!-- Stepper -->
+      <div class="stepper">
+        <div class="stepper-step active">
+          <div class="stepper-num">1</div>
+          <span>Validasi</span>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="stepper-step">
+          <div class="stepper-num">2</div>
+          <span>Handover</span>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="stepper-step">
+          <div class="stepper-num">3</div>
+          <span>Konfirmasi</span>
+        </div>
+      </div>
+
+      <!-- Langkah 1: Validasi -->
+      <div class="card" style="margin-bottom:var(--s3);">
+        <div class="card-header">
+          <div class="card-title">Item Wajib Belum Selesai</div>
+          <span class="badge badge-warning">3 item</span>
+        </div>
+        <div class="checklist-item">
+          <div class="checklist-checkbox"></div>
+          <div class="checklist-body">
+            <div class="checklist-title">Cek suhu freezer</div>
+            <div class="checklist-meta">
+              <span>Wajib</span>
+              <span>•</span>
+              <span>Target 09:00</span>
+            </div>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="checklist-checkbox"></div>
+          <div class="checklist-body">
+            <div class="checklist-title">Cek tanggal expired bahan</div>
+            <div class="checklist-meta">
+              <span>Wajib</span>
+              <span>•</span>
+              <span>Target 09:30</span>
+            </div>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="checklist-checkbox"></div>
+          <div class="checklist-body">
+            <div class="checklist-title">Hitung kas awal</div>
+            <div class="checklist-meta">
+              <span>Wajib</span>
+              <span>•</span>
+              <span>Target 07:15</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="banner banner-warning" style="margin-bottom:var(--s3);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        <div>Tombol lanjut nonaktif sampai semua item wajib selesai atau di-skip dengan alasan</div>
+      </div>
+
+      <button class="btn btn-primary btn-block btn-lg" disabled>Lanjut ke Handover</button>
+    </main>
+  </div>
+
+  <script src="js/shared.js"></script>
+</body>
+</html>

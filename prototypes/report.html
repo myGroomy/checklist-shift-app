@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Report — checklist-shift</title>
+  <link rel="stylesheet" href="css/shared.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="header">
+      <div class="header-inner">
+        <div>
+          <div class="header-title">Report</div>
+          <div class="header-sub">5 Oktober 2026 — Cabang BDG01</div>
+        </div>
+        <a href="akun.html" class="avatar">BS</a>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <!-- Navigator Tanggal -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s3);">
+        <button class="btn btn-outline btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <div style="text-align:center;">
+          <div style="font-size:var(--text-base);font-weight:600;">5 Oktober 2026</div>
+          <div style="font-size:10px;color:var(--ink-muted);">Senin</div>
+        </div>
+        <button class="btn btn-outline btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+
+      <!-- Dua Kartu Ringkasan -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-bottom:var(--s3);">
+        <div class="card" style="text-align:center;">
+          <div style="width:40px;height:40px;background:var(--success-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto var(--s1);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          </div>
+          <div style="font-size:var(--text-xl);font-weight:700;">12/20</div>
+          <div style="font-size:10px;color:var(--ink-muted);">Checklist</div>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="width:40px;height:40px;background:var(--error-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto var(--s1);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--error)" stroke-width="2"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          </div>
+          <div style="font-size:var(--text-xl);font-weight:700;">2</div>
+          <div style="font-size:10px;color:var(--ink-muted);">Incident</div>
+        </div>
+      </div>
+
+      <!-- Daftar Laporan -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Laporan Shift</div>
+        </div>
+        <a href="report-detail.html" class="shift-card" style="display:block;margin-bottom:var(--s1);">
+          <div class="shift-card-header">
+            <div>
+              <div class="shift-card-title">Opening</div>
+              <div class="shift-card-time">07:00 — 15:00 WIB</div>
+            </div>
+            <span class="badge badge-success">Ditutup</span>
+          </div>
+          <div class="shift-card-body">
+            <div class="shift-card-info">
+              <div class="shift-card-label">PJ</div>
+              <div class="shift-card-value">Budi Santoso</div>
+            </div>
+            <div class="shift-card-info">
+              <div class="shift-card-label">Progress</div>
+              <div class="shift-card-value">12/20</div>
+            </div>
+          </div>
+        </a>
+        <a href="report-detail.html" class="shift-card" style="display:block;">
+          <div class="shift-card-header">
+            <div>
+              <div class="shift-card-title">Closing</div>
+              <div class="shift-card-time">15:00 — 22:00 WIB</div>
+            </div>
+            <span class="badge badge-neutral">Belum ada</span>
+          </div>
+        </a>
+      </div>
+    </main>
+
+    <nav class="bottom-nav">
+      <a href="home.html" class="bottom-nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        Home
+      </a>
+      <a href="checklist.html" class="bottom-nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Checklist
+      </a>
+      <a href="incident.html" class="bottom-nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        Incident
+      </a>
+      <a href="report.html" class="bottom-nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        Report
+      </a>
+    </nav>
+  </div>
+
+  <script src="js/shared.js"></script>
+</body>
+</html>

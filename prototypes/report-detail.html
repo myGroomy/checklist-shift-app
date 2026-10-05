@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Detail Laporan — checklist-shift</title>
+  <link rel="stylesheet" href="css/shared.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="header">
+      <div class="header-inner">
+        <div>
+          <div class="header-title">Detail Laporan</div>
+          <div class="header-sub">BDG01-20261005-001</div>
+        </div>
+        <a href="report.html" class="btn btn-ghost btn-sm">Kembali</a>
+      </div>
+    </header>
+
+    <main class="page-content no-bottom-pad">
+      <!-- Report Header -->
+      <div class="report-header">
+        <div class="report-header-title">Laporan Shift Opening</div>
+        <div class="report-header-meta">
+          <span>Cabang: BDG01 — Bandung</span>
+          <span>•</span>
+          <span>Tanggal: 5 Oktober 2026</span>
+          <span>•</span>
+          <span>PJ: Budi Santoso</span>
+        </div>
+        <div style="margin-top:var(--s2);">
+          <span class="badge badge-success">Ditutup</span>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-value">12/20</div>
+          <div class="stat-label">Checklist</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">2</div>
+          <div class="stat-label">Incident</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">5</div>
+          <div class="stat-label">Peserta</div>
+        </div>
+      </div>
+
+      <!-- Kontribusi -->
+      <div class="card" style="margin-bottom:var(--s3);">
+        <div class="card-header">
+          <div class="card-title">Kontribusi Peserta</div>
+        </div>
+        <div class="handover-field">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:var(--s1);">
+              <div class="avatar sm">BS</div>
+              <span>Budi Santoso (PJ)</span>
+            </div>
+            <span style="font-size:var(--text-xs);color:var(--ink-muted);">5 item</span>
+          </div>
+        </div>
+        <div class="handover-field">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:var(--s1);">
+              <div class="avatar sm">RA</div>
+              <span>Rina Amelia</span>
+            </div>
+            <span style="font-size:var(--text-xs);color:var(--ink-muted);">4 item</span>
+          </div>
+        </div>
+        <div class="handover-field">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:var(--s1);">
+              <div class="avatar sm">DW</div>
+              <span>Dewi Wulandari</span>
+            </div>
+            <span style="font-size:var(--text-xs);color:var(--ink-muted);">3 item</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Checklist per Kategori -->
+      <div class="card" style="margin-bottom:var(--s3);">
+        <div class="card-header">
+          <div class="card-title">Checklist per Kategori</div>
+        </div>
+        <div class="category-card">
+          <div class="category-header">
+            <span class="category-name">Kebersihan</span>
+            <span class="category-progress">3/5</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:60%;"></div></div>
+        </div>
+        <div class="category-card">
+          <div class="category-header">
+            <span class="category-name">Food Safety</span>
+            <span class="category-progress">2/4</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:50%;"></div></div>
+        </div>
+        <div class="category-card">
+          <div class="category-header">
+            <span class="category-name">Kas</span>
+            <span class="category-progress">1/3</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:33%;"></div></div>
+        </div>
+      </div>
+
+      <!-- Handover -->
+      <div class="card" style="margin-bottom:var(--s3);">
+        <div class="card-header">
+          <div class="card-title">Handover</div>
+        </div>
+        <div class="handover-field">
+          <div class="handover-label">Kas Akhir</div>
+          <div class="handover-value">Rp 2.450.000</div>
+        </div>
+        <div class="handover-field">
+          <div class="handover-label">Catatan</div>
+          <div class="handover-value">Shift lancar, ada komplain pelanggan tentang kopi</div>
+        </div>
+      </div>
+
+      <!-- Addendum -->
+      <div class="card" style="margin-bottom:var(--s4);">
+        <div class="card-header">
+          <div class="card-title">Addendum</div>
+        </div>
+        <div class="empty-state" style="padding:var(--s3);">
+          <div style="font-size:var(--text-xs);">Belum ada addendum</div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-block btn-lg">Bagikan ke WhatsApp</button>
+    </main>
+  </div>
+
+  <script src="js/shared.js"></script>
+</body>
+</html>

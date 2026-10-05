@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Incident Admin — checklist-shift</title>
+  <link rel="stylesheet" href="css/shared.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-title">Admin</div>
+      <a href="admin-dashboard.html" class="admin-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
+      <a href="admin-cabang.html" class="admin-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/></svg>Cabang</a>
+      <a href="admin-akun.html" class="admin-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Akun</a>
+      <a href="admin-shift.html" class="admin-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Shift</a>
+      <a href="admin-checklist-builder.html" class="admin-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Checklist Builder</a>
+      <a href="admin-handover-builder.html" class="admin-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Handover Builder</a>
+      <a href="admin-kategori-incident.html" class="admin-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>Kategori Incident</a>
+      <a href="admin-operasi-shift.html" class="admin-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>Operasi Shift</a>
+      <a href="admin-incident.html" class="admin-nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>Incident</a>
+      <a href="admin-laporan.html" class="admin-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>Laporan</a>
+      <a href="admin-pengaturan.html" class="admin-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Pengaturan</a>
+      <a href="admin-audit-log.html" class="admin-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>Audit Log</a>
+      <a href="#" class="admin-nav-item" style="margin-top:auto;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>Logout</a>
+    </aside>
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <div class="admin-topbar-title">Incident</div>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-chip active">Semua</button>
+        <button class="filter-chip">Open</button>
+        <button class="filter-chip">Selesai</button>
+        <button class="filter-chip">BDG01</button>
+        <button class="filter-chip">BDG02</button>
+        <button class="filter-chip">BDG03</button>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>ID</th><th>Kategori</th><th>Deskripsi</th><th>Cabang</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody>
+            <tr><td>INC-001</td><td>Kerusakan Peralatan</td><td>Freezer tidak dingin</td><td>BDG01</td><td><span class="badge badge-error">Open</span></td><td><button class="btn btn-ghost btn-sm">Detail</button></td></tr>
+            <tr><td>INC-002</td><td>Menu Basi</td><td>Daging ayam berbau</td><td>BDG01</td><td><span class="badge badge-error">Open</span></td><td><button class="btn btn-ghost btn-sm">Detail</button></td></tr>
+            <tr><td>INC-003</td><td>Komplain</td><td>Pelanggan komplain kopi pahit</td><td>BDG02</td><td><span class="badge badge-success">Selesai</span></td><td><button class="btn btn-ghost btn-sm">Detail</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+  <script src="js/shared.js"></script>
+</body>
+</html>

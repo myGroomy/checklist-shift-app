@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Pasang PWA — checklist-shift</title>
+  <link rel="stylesheet" href="css/shared.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="header">
+      <div class="header-inner">
+        <div>
+          <div class="header-title">Pasang PWA</div>
+          <div class="header-sub">Panduan memasang aplikasi di layar utama</div>
+        </div>
+        <a href="akun.html" class="btn btn-ghost btn-sm">Tutup</a>
+      </div>
+    </header>
+
+    <main class="page-content no-bottom-pad">
+      <div class="card" style="margin-bottom:var(--s4);">
+        <div class="card-header">
+          <div class="card-title">iOS (Safari)</div>
+        </div>
+        <div style="display:flex;gap:var(--s3);margin-bottom:var(--s3);">
+          <div style="width:60px;height:60px;background:var(--canvas);border-radius:var(--r-md);flex-shrink:0;"></div>
+          <div style="font-size:var(--text-xs);color:var(--ink-muted);">
+            <strong style="color:var(--ink);">Langkah 1:</strong> Buka aplikasi di Safari<br>
+            <strong style="color:var(--ink);">Langkah 2:</strong> Tap tombol Share (kotak dengan panah ke atas)<br>
+            <strong style="color:var(--ink);">Langkah 3:</strong> Pilih "Add to Home Screen"<br>
+            <strong style="color:var(--ink);">Langkah 4:</strong> Tap "Add" di pojok kanan atas
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:var(--s4);">
+        <div class="card-header">
+          <div class="card-title">Android (Chrome)</div>
+        </div>
+        <div style="display:flex;gap:var(--s3);margin-bottom:var(--s3);">
+          <div style="width:60px;height:60px;background:var(--canvas);border-radius:var(--r-md);flex-shrink:0;"></div>
+          <div style="font-size:var(--text-xs);color:var(--ink-muted);">
+            <strong style="color:var(--ink);">Langkah 1:</strong> Buka aplikasi di Chrome<br>
+            <strong style="color:var(--ink);">Langkah 2:</strong> Tap menu tiga titik di pojok kanan atas<br>
+            <strong style="color:var(--ink);">Langkah 3:</strong> Pilih "Add to Home screen" atau "Install app"<br>
+            <strong style="color:var(--ink);">Langkah 4:</strong> Tap "Install" atau "Add"
+          </div>
+        </div>
+      </div>
+
+      <div class="banner banner-info" style="margin-bottom:var(--s4);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+        <div>Setelah dipasang, aplikasi akan muncul di layar utama dan berjalan seperti aplikasi native</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Keuntungan PWA</div>
+        </div>
+        <div class="handover-field">
+          <div class="handover-label">Akses Lebih Cepat</div>
+          <div class="handover-value">Buka langsung dari layar utama, tanpa perlu browser</div>
+        </div>
+        <div class="handover-field">
+          <div class="handover-label">Notifikasi Push</div>
+          <div class="handover-value">Terima notifikasi penting langsung di HP</div>
+        </div>
+        <div class="handover-field">
+          <div class="handover-label">Offline Read-Only</div>
+          <div class="handover-value">Lihat checklist dan laporan terakhir tanpa internet</div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="js/shared.js"></script>
+</body>
+</html>

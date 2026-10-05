@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Checklist Aktif — checklist-shift</title>
+  <link rel="stylesheet" href="css/shared.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="header">
+      <div class="header-inner">
+        <div>
+          <div class="header-title">Opening — 07:00-15:00</div>
+          <div class="header-sub">PJ: Budi Santoso • 12/20 selesai</div>
+        </div>
+        <div class="header-actions">
+          <div class="avatar-stack">
+            <div class="avatar sm">BS</div>
+            <div class="avatar sm">RA</div>
+            <div class="avatar sm">DW</div>
+            <div class="avatar-more">+2</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content no-bottom-pad">
+      <!-- Progress -->
+      <div class="card" style="margin-bottom:var(--s3);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s1);">
+          <span style="font-size:var(--text-xs);font-weight:500;">Progress Keseluruhan</span>
+          <span style="font-size:var(--text-xs);color:var(--ink-muted);">12/20</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:60%;"></div></div>
+      </div>
+
+      <!-- Sticky Action Bar -->
+      <div style="position:sticky;top:52px;z-index:30;background:var(--canvas);padding:var(--s1) 0;margin-bottom:var(--s3);">
+        <div style="display:flex;gap:var(--s1);">
+          <button class="btn btn-outline btn-sm" style="flex:1;">Saya Bertugas</button>
+          <a href="tutup-shift.html" class="btn btn-primary btn-sm" style="flex:1;">Tutup Shift</a>
+        </div>
+      </div>
+
+      <!-- Akordeon Kategori -->
+      <div class="accordion">
+        <!-- Kategori 1 -->
+        <div class="accordion-item open">
+          <button class="accordion-trigger">
+            <div style="display:flex;align-items:center;gap:var(--s1);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              Kebersihan
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--s1);">
+              <span style="font-size:var(--text-xs);color:var(--ink-muted);">3/5</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </button>
+          <div class="accordion-content">
+            <div class="checklist-item done">
+              <div class="checklist-checkbox checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+              <div class="checklist-body">
+                <div class="checklist-title">Sapu lantai area kasir</div>
+                <div class="checklist-meta">
+                  <span>Wajib</span>
+                  <span>•</span>
+                  <span>Target 07:30</span>
+                  <span>•</span>
+                  <span class="badge badge-success">Tepat waktu</span>
+                </div>
+                <div class="checklist-meta" style="margin-top:2px;">
+                  <span>Oleh RA • 07:25</span>
+                </div>
+              </div>
+            </div>
+            <div class="checklist-item done">
+              <div class="checklist-checkbox checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+              <div class="checklist-body">
+                <div class="checklist-title">Pel meja makan</div>
+                <div class="checklist-meta">
+                  <span>Wajib</span>
+                  <span>•</span>
+                  <span>Target 07:30</span>
+                  <span>•</span>
+                  <span class="badge badge-success">Tepat waktu</span>
+                </div>
+                <div class="checklist-meta" style="margin-top:2px;">
+                  <span>Oleh DW • 07:28</span>
+                </div>
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-checkbox"></div>
+              <div class="checklist-body">
+                <div class="checklist-title">Cek suhu freezer</div>
+                <div class="checklist-meta">
+                  <span>Wajib</span>
+                  <span>•</span>
+                  <span>Target 09:00</span>
+                  <span>•</span>
+                  <span class="badge badge-warning">30 menit lagi</span>
+                </div>
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-checkbox"></div>
+              <div class="checklist-body">
+                <div class="checklist-title">Stok minuman dingin</div>
+                <div class="checklist-meta">
+                  <span>Opsional</span>
+                  <span>•</span>
+                  <span>Target 10:00</span>
+                </div>
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-checkbox"></div>
+              <div class="checklist-body">
+                <div class="checklist-title">Bersihkan toilet</div>
+                <div class="checklist-meta">
+                  <span>Wajib</span>
+                  <span>•</span>
+                  <span>Target 11:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kategori 2 -->
+        <div class="accordion-item">
+          <button class="accordion-trigger">
+            <div style="display:flex;align-items:center;gap:var(--s1);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              Food Safety
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--s1);">
+              <span style="font-size:var(--text-xs);color:var(--ink-muted);">2/4</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </button>
+          <div class="accordion-content">
+            <div class="checklist-item done">
+              <div class="checklist-checkbox checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+              <div class="checklist-body">
+                <div class="checklist-title">Cek suhu chiller</div>
+                <div class="checklist-meta">
+                  <span>Wajib</span>
+                  <span>•</span>
+                  <span>Target 08:00</span>
+                </div>
+                <div class="checklist-value">Suhu: 4°C ✓</div>
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-checkbox"></div>
+              <div class="checklist-body">
+                <div class="checklist-title">Cek tanggal expired bahan</div>
+                <div class="checklist-meta">
+                  <span>Wajib</span>
+                  <span>•</span>
+                  <span>Target 09:30</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kategori 3 -->
+        <div class="accordion-item">
+          <button class="accordion-trigger">
+            <div style="display:flex;align-items:center;gap:var(--s1);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              Kas
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--s1);">
+              <span style="font-size:var(--text-xs);color:var(--ink-muted);">1/3</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </button>
+          <div class="accordion-content">
+            <div class="checklist-item">
+              <div class="checklist-checkbox"></div>
+              <div class="checklist-body">
+                <div class="checklist-title">Hitung kas awal</div>
+                <div class="checklist-meta">
+                  <span>Wajib</span>
+                  <span>•</span>
+                  <span>Target 07:15</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/shared.js"></script>
+</body>
+</html>

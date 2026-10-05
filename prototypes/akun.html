@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Akun — checklist-shift</title>
+  <link rel="stylesheet" href="css/shared.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="header">
+      <div class="header-inner">
+        <div>
+          <div class="header-title">Akun</div>
+          <div class="header-sub">Profil dan pengaturan</div>
+        </div>
+        <a href="home.html" class="btn btn-ghost btn-sm">Kembali</a>
+      </div>
+    </header>
+
+    <main class="page-content no-bottom-pad">
+      <!-- Profil -->
+      <div class="card" style="margin-bottom:var(--s3);">
+        <div style="display:flex;align-items:center;gap:var(--s3);margin-bottom:var(--s3);">
+          <div class="avatar lg">BS</div>
+          <div>
+            <div style="font-size:var(--text-lg);font-weight:600;">Budi Santoso</div>
+            <div style="font-size:var(--text-xs);color:var(--ink-muted);">budi.santoso</div>
+            <span class="badge badge-neutral" style="margin-top:2px;">Petugas</span>
+          </div>
+        </div>
+        <div class="handover-field">
+          <div class="handover-label">Cabang Akses</div>
+          <div class="handover-value">BDG01 — Bandung</div>
+        </div>
+        <div class="handover-field">
+          <div class="handover-label">Login Terakhir</div>
+          <div class="handover-value">5 Oktober 2026, 07:00 WIB</div>
+        </div>
+      </div>
+
+      <!-- Menu -->
+      <div class="card" style="margin-bottom:var(--s3);">
+        <div class="settings-group" style="margin-bottom:0;border:none;padding:0;">
+          <div class="settings-item">
+            <div>
+              <div class="settings-item-label">Ganti PIN</div>
+              <div class="settings-item-desc">Ubah PIN login Anda</div>
+            </div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </div>
+          <div class="settings-item">
+            <div>
+              <div class="settings-item-label">Preferensi Notifikasi</div>
+              <div class="settings-item-desc">Atur jenis notifikasi yang diterima</div>
+            </div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </div>
+          <div class="settings-item">
+            <div>
+              <div class="settings-item-label">Panduan Pasang PWA</div>
+              <div class="settings-item-desc">Cara memasang aplikasi di layar utama</div>
+            </div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logout -->
+      <button class="btn btn-outline btn-block" style="margin-bottom:var(--s3);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+        Logout
+      </button>
+
+      <button class="btn btn-ghost btn-block" style="color:var(--ink-muted);">
+        Logout dari semua perangkat
+      </button>
+    </main>
+  </div>
+
+  <script src="js/shared.js"></script>
+</body>
+</html>

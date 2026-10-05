@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Login — checklist-shift</title>
+  <link rel="stylesheet" href="css/shared.css">
+</head>
+<body>
+  <div class="app-shell" style="display:flex;align-items:center;justify-content:center;min-height:100dvh;padding:var(--s3);">
+    <div style="width:100%;max-width:360px;">
+      <div style="text-align:center;margin-bottom:var(--s6);">
+        <div style="width:56px;height:56px;background:var(--ink);border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;margin:0 auto var(--s3);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <h1 style="font-size:var(--text-xl);font-weight:700;">checklist-shift</h1>
+        <p style="color:var(--ink-muted);font-size:var(--text-xs);margin-top:2px;">Masuk untuk memulai shift Anda</p>
+      </div>
+
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-input" placeholder="Masukkan username" value="budi.santoso">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">PIN <span class="required">*</span></label>
+          <div class="pin-input">
+            <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+            <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+            <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+            <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+            <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+            <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block btn-lg">Masuk</button>
+
+        <div class="divider-text">atau</div>
+
+        <a href="lupa-pin.html" class="btn btn-outline btn-block">Lupa PIN? Hubungi Admin</a>
+      </div>
+
+      <p style="text-align:center;font-size:10px;color:var(--ink-light);margin-top:var(--s3);">v2.0 — Supabase PostgreSQL</p>
+    </div>
+  </div>
+
+  <script src="js/shared.js"></script>
+</body>
+</html>

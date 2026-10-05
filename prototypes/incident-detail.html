@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Detail Incident — checklist-shift</title>
+  <link rel="stylesheet" href="css/shared.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="header">
+      <div class="header-inner">
+        <div>
+          <div class="header-title">Detail Incident</div>
+          <div class="header-sub">INC-20261005-001</div>
+        </div>
+        <a href="incident.html" class="btn btn-ghost btn-sm">Kembali</a>
+      </div>
+    </header>
+
+    <main class="page-content no-bottom-pad">
+      <div class="card" style="margin-bottom:var(--s3);">
+        <div class="card-header">
+          <div class="card-title">Freezer tidak dingin</div>
+          <span class="badge badge-error">Open</span>
+        </div>
+        <div style="margin-bottom:var(--s2);">
+          <div style="font-size:var(--text-xs);color:var(--ink-muted);margin-bottom:2px;">Kategori</div>
+          <span class="badge badge-neutral">Kerusakan peralatan</span>
+        </div>
+        <div style="margin-bottom:var(--s2);">
+          <div style="font-size:var(--text-xs);color:var(--ink-muted);margin-bottom:2px;">Deskripsi</div>
+          <p style="font-size:var(--text-sm);">Suhu freezer naik ke -5°C, perlu dicek segera. Kompresor mungkin perlu diganti.</p>
+        </div>
+        <div style="margin-bottom:var(--s2);">
+          <div style="font-size:var(--text-xs);color:var(--ink-muted);margin-bottom:2px;">Waktu Kejadian</div>
+          <div style="font-size:var(--text-sm);">08:15 WIB</div>
+        </div>
+        <div style="margin-bottom:var(--s2);">
+          <div style="font-size:var(--text-xs);color:var(--ink-muted);margin-bottom:2px;">Pelapor</div>
+          <div style="display:flex;align-items:center;gap:var(--s1);">
+            <div class="avatar sm">RA</div>
+            <span style="font-size:var(--text-sm);">Rina Amelia</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:var(--text-xs);color:var(--ink-muted);margin-bottom:var(--s1);">Foto</div>
+          <div class="photo-grid">
+            <div class="photo-thumb" style="background:var(--canvas);"></div>
+            <div class="photo-thumb" style="background:var(--canvas);"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:var(--s3);">
+        <div class="card-header">
+          <div class="card-title">Timeline Catatan</div>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot active"></div>
+            <div class="timeline-content">
+              <div>Catatan ditambahkan oleh <strong>Budi Santoso</strong></div>
+              <div class="timeline-time">08:30 WIB</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div>Incident dibuat oleh <strong>Rina Amelia</strong></div>
+              <div class="timeline-time">08:15 WIB</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">Tambah Catatan</label>
+          <textarea class="form-textarea" placeholder="Tulis catatan lanjutan..."></textarea>
+        </div>
+        <button class="btn btn-primary btn-block">Tambah Catatan</button>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/shared.js"></script>
+</body>
+</html>
