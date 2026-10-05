@@ -16,14 +16,14 @@ interface SnapshotPoint {
   sort_order: number;
 }
 
-interface SnapshotCategory {
+export interface SnapshotCategory {
   id: string;
   name: string;
   sort_order: number;
   points: SnapshotPoint[];
 }
 
-interface Snapshot {
+export interface Snapshot {
   v: number;
   shift: {
     id: string;
