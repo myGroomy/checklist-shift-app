@@ -1,4 +1,4 @@
-import { and, eq, inArray, sql } from 'drizzle-orm';
+import { and, eq, inArray, or, sql } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '../../../lib/db';
 import { getServerTime } from '../../../lib/db/server-time';
@@ -46,12 +46,19 @@ export const GET = withAuth(async (req: NextRequest, ctx: AuthContext) => {
 
   const now = getServerTime();
   const timezoneByBranch = new Map(branchRows.map((b) => [b.id, b.timezone] as const));
-  const todayByBranch = new Map(
-    branchRows.map((b) => [b.id, getShiftDate(now, b.timezone)])
-  );
+  const todayByBranch = new Map<string, string>();
+  const branchDateConditions = branchRows.map((branch) => {
+    const shiftDate = getShiftDate(now, branch.timezone);
+    todayByBranch.set(branch.id, shiftDate);
+    return and(
+      eq(shiftInstances.branchId, branch.id),
+      eq(shiftInstances.shiftDate, shiftDate)
+    );
+  });
+  const branchDateFilter = or(...branchDateConditions) ?? sql`false`;
 
-  // Instance non-void di cabang yang diakses; pemfilteran tanggal dilakukan di
-  // aplikasi agar tidak memakai SQL mentah.
+  // Batasi instance sejak query; pasangan cabang/tanggal mengikuti zona waktu
+  // masing-masing cabang dan memakai index branch_date.
   const instances = await db
     .select({
       id: shiftInstances.id,
@@ -65,7 +72,7 @@ export const GET = withAuth(async (req: NextRequest, ctx: AuthContext) => {
     .from(shiftInstances)
     .where(
       and(
-        inArray(shiftInstances.branchId, branchIds),
+        branchDateFilter,
         sql`${shiftInstances.status} <> 'void'`
       )
     );
