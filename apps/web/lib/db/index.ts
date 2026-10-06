@@ -13,7 +13,11 @@ const globalForDb = globalThis as typeof globalThis & {
 
 const postgresClient =
   globalForDb.postgresClient ??
-  postgres(connectionString, { max: 1, prepare: false });
+  postgres(connectionString, {
+    max: 10,
+    idle_timeout: 20,
+    connect_timeout: 10,
+  });
 
 if (process.env.NODE_ENV !== 'production') {
   globalForDb.postgresClient = postgresClient;
