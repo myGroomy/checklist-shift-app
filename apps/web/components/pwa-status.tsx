@@ -9,6 +9,7 @@ type BeforeInstallPromptEvent = Event & {
 };
 
 const DISMISS_KEY = 'pwa-install-dismissed';
+const SHOWN_KEY = 'pwa-install-shown';
 
 export function PwaStatus() {
   const [isOnline, setIsOnline] = useState(true);
@@ -99,14 +100,14 @@ export function PwaStatus() {
           Tidak ada koneksi. Beberapa fitur wajib online akan dinonaktifkan.
         </div>
       )}
-      {deferredPrompt && (
+      {deferredPrompt && sessionStorage.getItem(SHOWN_KEY) !== 'true' && (
         <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 rounded-lg border border-border bg-surface p-3 shadow-lg">
           <p className="text-sm text-ink">Install aplikasi untuk akses lebih cepat?</p>
           <div className="flex gap-2">
             <Button type="button" size="sm" onClick={() => void installApp()}>
               Pasang
             </Button>
-            <Button type="button" size="sm" variant="outline" onClick={() => setDeferredPrompt(null)}>
+            <Button type="button" size="sm" variant="outline" onClick={() => { sessionStorage.setItem(SHOWN_KEY, 'true'); setDeferredPrompt(null); }}>
               Nanti
             </Button>
             <Button type="button" size="sm" variant="ghost" onClick={dismissPermanently}>
