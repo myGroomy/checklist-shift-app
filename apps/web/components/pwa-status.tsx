@@ -33,7 +33,36 @@ export function PwaStatus() {
     window.addEventListener('appinstalled', handleAppInstalled);
 
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(() => undefined);
+      if (process.env.NODE_ENV === 'production') {
+        navigator.serviceWorker.register('/sw.js').catch(() => undefined);
+      } else {
+        navigator.serviceWorker
+          .getRegistrations()
+          .then((registrations) =>
+            Promise.all(
+              registrations
+                .filter((registration) => {
+                  const scope = new URL(registration.scope);
+                  return scope.origin === window.location.origin && scope.pathname === '/';
+                })
+                .map((registration) => registration.unregister())
+            )
+          )
+          .catch((error: unknown) => console.error('Gagal membersihkan service worker development:', error));
+
+        if ('caches' in window) {
+          window.caches
+            .keys()
+            .then((keys) =>
+              Promise.all(
+                keys
+                  .filter((key) => key.startsWith('checklist-shift-'))
+                  .map((key) => window.caches.delete(key))
+              )
+            )
+            .catch((error: unknown) => console.error('Gagal membersihkan cache development:', error));
+        }
+      }
     }
 
     return () => {
