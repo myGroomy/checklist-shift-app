@@ -74,9 +74,9 @@ export default function GantiPinPage() {
               <path d="M7 11V7a5 5 0 0110 0v4" />
             </svg>
           </div>
-          <h1 className="text-xl font-bold">Ganti PIN Wajib</h1>
+          <h1 className="text-xl font-bold">Ganti PIN</h1>
           <p className="mt-1 text-xs text-ink-muted">
-            PIN awal Anda harus diganti demi keamanan sebelum melanjutkan
+            Perbarui PIN Anda untuk menjaga keamanan akun
           </p>
         </div>
 

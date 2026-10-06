@@ -13,7 +13,5 @@ export default async function ShiftPage({
 
   const ctx = await validateSessionToken(token);
   if (!ctx) redirect('/login');
-  if (ctx.user.mustChangePin) redirect('/ganti-pin');
-
   return <ShiftChecklistClient shiftId={id} userId={ctx.user.id} />;
 }

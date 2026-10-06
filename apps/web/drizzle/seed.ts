@@ -101,7 +101,7 @@ async function seed() {
   console.log('\nLogin default:');
   console.log('  Username: admin');
   console.log('  PIN: 123456');
-  console.log('  (Ganti PIN setelah login pertama)');
+  console.log('  (PIN dapat diganti setelah login)');
 
   await sql.end();
 }

@@ -20,7 +20,7 @@ function isErrorBody(v: unknown): v is ErrorBody {
 /**
  * Fetch helper untuk halaman admin:
  * - selalu menyertakan header CSRF `X-Requested-With: fetch`
- * - 401 -> redirect /login; MUST_CHANGE_PIN -> redirect /ganti-pin
+ * - 401 -> redirect /login
  * - galat -> lempar ApiError dengan pesan dari server
  */
 export async function apiFetch<T = unknown>(
@@ -51,10 +51,6 @@ export async function apiFetch<T = unknown>(
     if (res.status === 401) {
       window.location.href = '/login';
       throw new ApiError('Sesi berakhir. Silakan login ulang.', 401);
-    }
-    if (err?.code === 'MUST_CHANGE_PIN') {
-      window.location.href = '/ganti-pin';
-      throw new ApiError('Anda wajib mengubah PIN terlebih dahulu.', 403, 'MUST_CHANGE_PIN');
     }
     throw new ApiError(
       err?.error || 'Terjadi kesalahan pada server',

@@ -31,9 +31,9 @@ export default async function AdminIndex() {
           id: branches.id,
           name: branches.name,
           code: branches.code,
-          activeShifts: sql<number>`COALESCE((SELECT COUNT(*) FROM shift_instances si WHERE si.branch_id = ${branches.id} AND si.status = 'berjalan'), 0)`,
-          openIncidents: sql<number>`COALESCE((SELECT COUNT(*) FROM incidents i WHERE i.branch_id = ${branches.id} AND i.status = 'open'), 0)`,
-          reportsToday: sql<number>`COALESCE((SELECT COUNT(*) FROM reports r JOIN shift_instances si ON si.id = r.shift_instance_id WHERE si.branch_id = ${branches.id} AND r.generated_at >= ${todayStart}), 0)`,
+          activeShifts: sql<number>`COALESCE((SELECT COUNT(*) FROM shift_instances si WHERE si.branch_id = "branches"."id" AND si.status = 'berjalan'), 0)`,
+          openIncidents: sql<number>`COALESCE((SELECT COUNT(*) FROM incidents i WHERE i.branch_id = "branches"."id" AND i.status = 'open'), 0)`,
+          reportsToday: sql<number>`COALESCE((SELECT COUNT(*) FROM reports r JOIN shift_instances si ON si.id = r.shift_instance_id WHERE si.branch_id = "branches"."id" AND r.generated_at >= ${todayStart.toISOString()}::timestamptz), 0)`,
         })
         .from(branches)
         .where(eq(branches.isActive, true))

@@ -72,7 +72,7 @@ export function PwaStatus() {
       {showInstall && (
         <div className="sticky top-0 z-50 border-b border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
           <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-2 sm:flex-row">
-            <span>Pasang checklist-shift di layar utama untuk pengalaman PWA yang lebih cepat.</span>
+            <span>Biar lebih cepat diakses tanpa buka browser, yuk install aplikasinya!.</span>
             <div className="flex gap-2">
               <button
                 type="button"

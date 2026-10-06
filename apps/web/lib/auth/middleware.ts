@@ -41,23 +41,6 @@ export function withAuth(handler: AuthenticatedHandler) {
       );
     }
 
-    // Paksa ganti PIN (Fase 2): hanya endpoint auth berikut yang boleh diakses
-    if (authCtx.user.mustChangePin) {
-      const path = req.nextUrl.pathname;
-      const allowed = [
-        '/api/auth/change-pin',
-        '/api/auth/logout',
-        '/api/auth/logout-all',
-        '/api/auth/me',
-      ].some((p) => path.startsWith(p));
-      if (!allowed) {
-        return NextResponse.json(
-          { error: 'Anda wajib mengubah PIN terlebih dahulu.', code: 'MUST_CHANGE_PIN' },
-          { status: 403 }
-        );
-      }
-    }
-
     return handler(req, authCtx);
   };
 }

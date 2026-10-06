@@ -11,7 +11,5 @@ export default async function IncidentDetailPage({
   if (!token) redirect('/login');
   const ctx = await validateSessionToken(token);
   if (!ctx) redirect('/login');
-  if (ctx.user.mustChangePin) redirect('/ganti-pin');
-
   return <IncidentDetail incidentId={params.id} />;
 }

@@ -7,7 +7,17 @@ if (!connectionString) {
   throw new Error('DATABASE_URL tidak ada di environment');
 }
 
-const sql = postgres(connectionString, { max: 10 });
+const globalForDb = globalThis as typeof globalThis & {
+  postgresClient?: ReturnType<typeof postgres>;
+};
 
-export const db = drizzle(sql, { schema });
+const postgresClient =
+  globalForDb.postgresClient ??
+  postgres(connectionString, { max: 1, prepare: false });
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForDb.postgresClient = postgresClient;
+}
+
+export const db = drizzle(postgresClient, { schema });
 export { schema };

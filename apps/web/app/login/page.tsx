@@ -13,20 +13,6 @@ function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleKeypadPress = (digit: string) => {
-    if (pin.length < 6) {
-      setPin((prev) => prev + digit);
-    }
-  };
-
-  const handleBackspace = () => {
-    setPin((prev) => prev.slice(0, -1));
-  };
-
-  const handleClear = () => {
-    setPin('');
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim()) {
@@ -53,7 +39,7 @@ function LoginForm() {
 
       const data = (await res.json()) as {
         error?: string;
-        user?: { mustChangePin?: boolean };
+        user?: { mustChangePin?: boolean; role?: 'admin' | 'petugas' };
       };
 
       if (!res.ok) {
@@ -63,7 +49,7 @@ function LoginForm() {
       }
 
       if (data.user?.mustChangePin) {
-        router.push('/ganti-pin');
+        router.push(data.user.role === 'admin' ? '/admin' : '/');
       } else {
         router.push(from);
       }
@@ -99,60 +85,22 @@ function LoginForm() {
       </div>
 
       <div className="mb-5">
-        <label className="block text-xs font-medium text-ink-muted mb-2">
+        <label htmlFor="pin" className="block text-xs font-medium text-ink-muted mb-2">
           PIN (6 Digit) <span className="text-red-500">*</span>
         </label>
-
-        {/* Display Indicator 6 Dots */}
-        <div className="flex justify-center gap-2 mb-4">
-          {[0, 1, 2, 3, 4, 5].map((idx) => (
-            <div
-              key={idx}
-              className={`h-10 w-10 rounded-lg border flex items-center justify-center text-lg font-bold transition-all ${
-                idx < pin.length
-                  ? 'border-ink bg-ink text-canvas'
-                  : 'border-border bg-canvas text-ink-light'
-              }`}
-            >
-              {idx < pin.length ? '•' : ''}
-            </div>
-          ))}
-        </div>
-
-        {/* Numeric Keypad Grid */}
-        <div className="grid grid-cols-3 gap-2">
-          {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((num) => (
-            <button
-              key={num}
-              type="button"
-              onClick={() => handleKeypadPress(num)}
-              className="h-12 rounded-lg border border-border bg-surface text-base font-semibold text-ink active:bg-canvas hover:bg-canvas transition-colors flex items-center justify-center touch-manipulation"
-            >
-              {num}
-            </button>
-          ))}
-          <button
-            type="button"
-            onClick={handleClear}
-            className="h-12 rounded-lg border border-border bg-surface text-xs font-medium text-ink-muted active:bg-canvas transition-colors flex items-center justify-center touch-manipulation"
-          >
-            Clear
-          </button>
-          <button
-            type="button"
-            onClick={() => handleKeypadPress('0')}
-            className="h-12 rounded-lg border border-border bg-surface text-base font-semibold text-ink active:bg-canvas hover:bg-canvas transition-colors flex items-center justify-center touch-manipulation"
-          >
-            0
-          </button>
-          <button
-            type="button"
-            onClick={handleBackspace}
-            className="h-12 rounded-lg border border-border bg-surface text-xs font-medium text-ink-muted active:bg-canvas transition-colors flex items-center justify-center touch-manipulation"
-          >
-            ⌫
-          </button>
-        </div>
+        <input
+          id="pin"
+          type="password"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          maxLength={6}
+          value={pin}
+          onChange={(e) => setPin(e.currentTarget.value.replace(/\D/g, '').slice(0, 6))}
+          placeholder="Masukkan PIN 6 digit"
+          autoComplete="current-password"
+          className="w-full h-12 rounded-lg border border-border bg-canvas px-3 text-base tracking-widest text-ink focus:border-ink focus:outline-none"
+          required
+        />
       </div>
 
       <button

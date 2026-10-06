@@ -212,7 +212,7 @@ export default function AkunPage() {
             branchIds: form.branchIds,
           },
         });
-        toast.success('Akun dibuat. User wajib ganti PIN saat login pertama.');
+        toast.success('Akun berhasil dibuat.');
         setFormOpen(false);
         await load();
       }
@@ -240,7 +240,7 @@ export default function AkunPage() {
           json: { reason: v.reason, pin: v.pin, newPin: v.newPin },
         });
         toast.success(
-          `PIN ${job.user.name} direset. Ia wajib ganti PIN saat login berikutnya.`
+          `PIN ${job.user.name} berhasil direset.`
         );
       } else if (job.kind === 'unlock') {
         await apiFetch(`/api/admin/users/${job.user.id}/unlock`, {
@@ -279,7 +279,7 @@ export default function AkunPage() {
     : job.kind === 'user-update'
       ? job.impact
       : job.kind === 'reset-pin'
-        ? `PIN ${job.user.name} akan diganti menjadi PIN baru. Ia wajib mengganti PIN lagi saat login berikutnya dan semua sesi lama tetap berlaku sampai diganti.`
+        ? `PIN ${job.user.name} akan diganti menjadi PIN baru. Semua sesi lama tetap berlaku.`
         : job.kind === 'unlock'
           ? `Percobaan PIN gagal ${job.user.name} direset dan akun bisa dipakai login lagi.`
           : `Seluruh sesi aktif ${job.user.name} dicabut. Ia harus login ulang.`;
@@ -490,7 +490,7 @@ export default function AkunPage() {
                   autoComplete="off"
                 />
                 <p className="text-[11px] text-ink-light">
-                  Wajib diganti oleh user saat login pertama
+                  User dapat menggantinya setelah login
                 </p>
               </div>
             )}
@@ -575,6 +575,5 @@ export default function AkunPage() {
     </div>
   );
 }
-
 
 

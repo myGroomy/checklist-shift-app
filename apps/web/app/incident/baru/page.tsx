@@ -7,7 +7,5 @@ export default async function CreateIncidentPage() {
   if (!token) redirect('/login');
   const ctx = await validateSessionToken(token);
   if (!ctx) redirect('/login');
-  if (ctx.user.mustChangePin) redirect('/ganti-pin');
-
   return <IncidentCreateForm />;
 }

@@ -10,7 +10,6 @@ export default async function Home() {
   const ctx = await validateSessionToken(token);
   if (!ctx) return <LandingPage />;
 
-  if (ctx.user.mustChangePin) redirect('/ganti-pin');
   if (ctx.user.role === 'admin') redirect('/admin');
 
   return <ShiftDashboardClient userId={ctx.user.id} userName={ctx.user.name} />;

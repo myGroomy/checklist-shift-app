@@ -7,7 +7,7 @@ import {
 
 /**
  * Guard untuk halaman /admin (server component).
- * Redirect: tanpa sesi -> /login; wajib ganti PIN -> /ganti-pin; bukan admin -> /.
+ * Redirect: tanpa sesi -> /login; bukan admin -> /.
  */
 export async function requireAdmin(): Promise<AuthContext> {
   const token = getSessionTokenFromCookie();
@@ -16,7 +16,6 @@ export async function requireAdmin(): Promise<AuthContext> {
   const ctx = await validateSessionToken(token);
   if (!ctx) redirect('/login');
 
-  if (ctx.user.mustChangePin) redirect('/ganti-pin');
   if (ctx.user.role !== 'admin') redirect('/');
 
   return ctx;
