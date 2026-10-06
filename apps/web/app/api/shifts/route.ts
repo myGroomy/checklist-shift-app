@@ -1,4 +1,4 @@
-import { and, eq, inArray, or, sql } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '../../../lib/db';
 import { getServerTime } from '../../../lib/db/server-time';
@@ -47,15 +47,10 @@ export const GET = withAuth(async (req: NextRequest, ctx: AuthContext) => {
   const now = getServerTime();
   const timezoneByBranch = new Map(branchRows.map((b) => [b.id, b.timezone] as const));
   const todayByBranch = new Map<string, string>();
-  const branchDateConditions = branchRows.map((branch) => {
-    const shiftDate = getShiftDate(now, branch.timezone);
-    todayByBranch.set(branch.id, shiftDate);
-    return and(
-      eq(shiftInstances.branchId, branch.id),
-      eq(shiftInstances.shiftDate, shiftDate)
-    );
-  });
-  const branchDateFilter = or(...branchDateConditions) ?? sql`false`;
+  for (const branch of branchRows) {
+    todayByBranch.set(branch.id, getShiftDate(now, branch.timezone));
+  }
+  const todayDates = Array.from(new Set(todayByBranch.values()));
 
   // Batasi instance sejak query; pasangan cabang/tanggal mengikuti zona waktu
   // masing-masing cabang dan memakai index branch_date.
@@ -72,37 +67,43 @@ export const GET = withAuth(async (req: NextRequest, ctx: AuthContext) => {
     .from(shiftInstances)
     .where(
       and(
-        branchDateFilter,
+        inArray(shiftInstances.branchId, branchIds),
+        inArray(shiftInstances.shiftDate, todayDates),
         sql`${shiftInstances.status} <> 'void'`
       )
     );
 
   const instanceByDefinition = new Map<string, (typeof instances)[number]>();
   for (const inst of instances) {
-    if (inst.shiftDate === todayByBranch.get(inst.branchId)) {
-      instanceByDefinition.set(inst.shiftDefinitionId, inst);
-    }
+    instanceByDefinition.set(inst.shiftDefinitionId, inst);
   }
 
-  return NextResponse.json({
-    branches: branchRows,
-    shifts: definitions.map((def) => {
-      const instance = instanceByDefinition.get(def.id);
-      const timezone = timezoneByBranch.get(def.branchId) ?? 'Asia/Jakarta';
-      return {
-        ...def,
-        timezone,
-        today: getShiftDate(now, timezone),
-        instance: instance
-          ? {
-              shift_instance_id: instance.id,
-              status: instance.status,
-              pj_user_id: instance.pjUserId,
-              opened_outside_hours: instance.openedOutsideHours,
-            }
-          : null,
-      };
-    }),
-    server_time: now.toISOString(),
-  });
+  return NextResponse.json(
+    {
+      branches: branchRows,
+      shifts: definitions.map((def) => {
+        const instance = instanceByDefinition.get(def.id);
+        const timezone = timezoneByBranch.get(def.branchId) ?? 'Asia/Jakarta';
+        return {
+          ...def,
+          timezone,
+          today: getShiftDate(now, timezone),
+          instance: instance
+            ? {
+                shift_instance_id: instance.id,
+                status: instance.status,
+                pj_user_id: instance.pjUserId,
+                opened_outside_hours: instance.openedOutsideHours,
+              }
+            : null,
+        };
+      }),
+      server_time: now.toISOString(),
+    },
+    {
+      headers: {
+        'Cache-Control': 'public, max-age=30, s-maxage=60',
+      },
+    }
+  );
 });

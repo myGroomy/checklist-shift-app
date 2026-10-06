@@ -38,7 +38,7 @@ export function IncidentList() {
     setError(null);
     try {
       const response = await fetch('/api/incidents', {
-        cache: 'no-store',
+        next: { revalidate: 30 },
         headers: { 'X-Requested-With': 'fetch' },
       });
       const result = (await response.json()) as {

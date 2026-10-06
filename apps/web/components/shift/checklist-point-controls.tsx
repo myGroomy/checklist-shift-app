@@ -1,8 +1,18 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Camera, Loader2, RotateCcw, SkipForward } from 'lucide-react';
+import { Camera, RotateCcw, SkipForward, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  Attachment,
+  AttachmentAction,
+  AttachmentActions,
+  AttachmentContent,
+  AttachmentDescription,
+  AttachmentMedia,
+  AttachmentTitle,
+} from '@/components/ui/attachment';
+import { Spinner } from '@/components/ui/spinner';
 
 type InputType = 'centang' | 'foto' | 'teks' | 'angka' | 'ok_tidak_ok';
 type EntryState = 'belum' | 'selesai' | 'skip';
@@ -179,10 +189,27 @@ export function ChecklistPointControls({
           onChange={(event) => void uploadPhoto(event.target.files?.[0])}
           disabled={disabled || busy || uploading}
         />
-        <Button type="button" variant="outline" onClick={() => fileRef.current?.click()} disabled={disabled || busy || uploading}>
-          {uploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Camera className="mr-2 h-4 w-4" />}
-          {uploading ? 'Mengompres & mengunggah...' : 'Ambil / pilih foto'}
-        </Button>
+        {uploading ? (
+          <Attachment state="uploading" className="w-full">
+            <AttachmentMedia>
+              <Spinner />
+            </AttachmentMedia>
+            <AttachmentContent>
+              <AttachmentTitle>Mengunggah foto...</AttachmentTitle>
+              <AttachmentDescription>Kompres & upload sedang berjalan</AttachmentDescription>
+            </AttachmentContent>
+            <AttachmentActions>
+              <AttachmentAction aria-label="Batalkan upload" disabled>
+                <X />
+              </AttachmentAction>
+            </AttachmentActions>
+          </Attachment>
+        ) : (
+          <Button type="button" variant="outline" onClick={() => fileRef.current?.click()} disabled={disabled || busy} className="w-full">
+            <Camera className="mr-2 h-4 w-4" />
+            Ambil / pilih foto
+          </Button>
+        )}
         <p className="mt-1 text-xs text-ink-muted">Foto otomatis dikompres maksimal 150 KB sebelum diunggah.</p>
         {photoError && <p role="alert" className="mt-2 text-sm text-error">{photoError}</p>}
       </>

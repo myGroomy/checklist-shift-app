@@ -66,7 +66,7 @@ export function ReportDetail({ reportId }: { reportId: string }) {
       setError(null);
       try {
         const response = await fetch(`/api/reports/${reportId}`, {
-          cache: 'no-store',
+          next: { revalidate: 30 },
           headers: { 'X-Requested-With': 'fetch' },
         });
         const result = (await response.json()) as ReportResponse & { error?: string };

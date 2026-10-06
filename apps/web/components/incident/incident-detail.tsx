@@ -40,7 +40,7 @@ export function IncidentDetail({ incidentId }: { incidentId: string }) {
     setError(null);
     try {
       const response = await fetch(`/api/incidents/${incidentId}`, {
-        cache: 'no-store',
+        next: { revalidate: 30 },
         headers: { 'X-Requested-With': 'fetch' },
       });
       const result = (await response.json()) as IncidentDetailData & { error?: string };

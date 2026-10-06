@@ -1,15 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
 };
 
+const DISMISS_KEY = 'pwa-install-dismissed';
+
 export function PwaStatus() {
   const [isOnline, setIsOnline] = useState(true);
-  const [showInstall, setShowInstall] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
@@ -19,11 +22,9 @@ export function PwaStatus() {
     const handleBeforeInstallPrompt = (event: Event) => {
       event.preventDefault();
       setDeferredPrompt(event as BeforeInstallPromptEvent);
-      setShowInstall(true);
     };
 
     const handleAppInstalled = () => {
-      setShowInstall(false);
       setDeferredPrompt(null);
     };
 
@@ -73,15 +74,46 @@ export function PwaStatus() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!deferredPrompt) return;
+
+    const dismissed = localStorage.getItem(DISMISS_KEY);
+    if (dismissed === 'true') return;
+
+    const timer = setTimeout(() => {
+      toast('Biar lebih cepat diakses tanpa buka browser, yuk install aplikasinya!', {
+        duration: Infinity,
+        action: {
+          label: 'Pasang',
+          onClick: () => void installApp(),
+        },
+        cancel: {
+          label: 'Nanti',
+          onClick: () => {},
+        },
+        closeButton: false,
+        onDismiss: () => {},
+        actionButtonStyle: {
+          backgroundColor: '#047857',
+          color: '#fff',
+        },
+      });
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [deferredPrompt]);
+
   const installApp = async () => {
-    if (!deferredPrompt) {
-      return;
-    }
+    if (!deferredPrompt) return;
 
     deferredPrompt.prompt();
     await deferredPrompt.userChoice;
     setDeferredPrompt(null);
-    setShowInstall(false);
+  };
+
+  const dismissPermanently = () => {
+    localStorage.setItem(DISMISS_KEY, 'true');
+    toast.dismiss();
   };
 
   const isStandalone = typeof window !== 'undefined' && window.matchMedia('(display-mode: standalone)').matches;
@@ -97,27 +129,19 @@ export function PwaStatus() {
           Tidak ada koneksi. Beberapa fitur wajib online akan dinonaktifkan.
         </div>
       )}
-
-      {showInstall && (
-        <div className="sticky top-0 z-50 border-b border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
-          <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-2 sm:flex-row">
-            <span>Biar lebih cepat diakses tanpa buka browser, yuk install aplikasinya!.</span>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={installApp}
-                className="rounded-lg bg-emerald-700 px-3 py-1.5 font-semibold text-white transition hover:bg-emerald-800"
-              >
-                Pasang
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowInstall(false)}
-                className="rounded-lg border border-emerald-700 px-3 py-1.5 font-semibold text-emerald-800"
-              >
-                Nanti
-              </button>
-            </div>
+      {deferredPrompt && (
+        <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 rounded-lg border border-border bg-surface p-3 shadow-lg">
+          <p className="text-sm text-ink">Install aplikasi untuk akses lebih cepat?</p>
+          <div className="flex gap-2">
+            <Button type="button" size="sm" onClick={() => void installApp()}>
+              Pasang
+            </Button>
+            <Button type="button" size="sm" variant="outline" onClick={() => toast.dismiss()}>
+              Nanti
+            </Button>
+            <Button type="button" size="sm" variant="ghost" onClick={dismissPermanently}>
+              Jangan tampilkan lagi
+            </Button>
           </div>
         </div>
       )}
