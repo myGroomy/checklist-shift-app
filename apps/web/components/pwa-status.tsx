@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 
 type BeforeInstallPromptEvent = Event & {
@@ -74,35 +73,6 @@ export function PwaStatus() {
     };
   }, []);
 
-  useEffect(() => {
-    if (!deferredPrompt) return;
-
-    const dismissed = localStorage.getItem(DISMISS_KEY);
-    if (dismissed === 'true') return;
-
-    const timer = setTimeout(() => {
-      toast('Biar lebih cepat diakses tanpa buka browser, yuk install aplikasinya!', {
-        duration: Infinity,
-        action: {
-          label: 'Pasang',
-          onClick: () => void installApp(),
-        },
-        cancel: {
-          label: 'Nanti',
-          onClick: () => {},
-        },
-        closeButton: false,
-        onDismiss: () => {},
-        actionButtonStyle: {
-          backgroundColor: '#047857',
-          color: '#fff',
-        },
-      });
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [deferredPrompt]);
-
   const installApp = async () => {
     if (!deferredPrompt) return;
 
@@ -113,7 +83,7 @@ export function PwaStatus() {
 
   const dismissPermanently = () => {
     localStorage.setItem(DISMISS_KEY, 'true');
-    toast.dismiss();
+    setDeferredPrompt(null);
   };
 
   const isStandalone = typeof window !== 'undefined' && window.matchMedia('(display-mode: standalone)').matches;
@@ -136,7 +106,7 @@ export function PwaStatus() {
             <Button type="button" size="sm" onClick={() => void installApp()}>
               Pasang
             </Button>
-            <Button type="button" size="sm" variant="outline" onClick={() => toast.dismiss()}>
+            <Button type="button" size="sm" variant="outline" onClick={() => setDeferredPrompt(null)}>
               Nanti
             </Button>
             <Button type="button" size="sm" variant="ghost" onClick={dismissPermanently}>
